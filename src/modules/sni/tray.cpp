@@ -24,11 +24,27 @@ Tray::Tray(const std::string& id, const Bar& bar, const Json::Value& config)
 }
 
 void Tray::onAdd(std::unique_ptr<Item>& item) {
-  if (config_["reverse-direction"].isBool() && config_["reverse-direction"].asBool()) {
-    box_.pack_end(item->event_box);
-  } else {
-    box_.pack_start(item->event_box);
+  bool visible = false;
+
+  const Json::Value only = config_["only"];
+  const Json::Value except = config_["except"];
+  const std::string object_path = item->object_path;
+
+  if (only.isArray()) {
+    visible = std::find(std::begin(only), std::end(only), object_path) != std::end(only);
   }
+  if (except.isArray()) {
+    visible = std::find(std::begin(except), std::end(except), object_path) == std::end(except);
+  }
+
+  if (visible) {
+    if (config_["reverse-direction"].isBool() && config_["reverse-direction"].asBool()) {
+      box_.pack_end(item->event_box);
+    } else {
+      box_.pack_start(item->event_box);
+    }
+  }
+  
   dp.emit();
 }
 

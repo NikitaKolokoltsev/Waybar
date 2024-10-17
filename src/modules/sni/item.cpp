@@ -68,8 +68,8 @@ Item::Item(const std::string& bn, const std::string& op, const Json::Value& conf
 
   auto interface = Glib::wrap(sn_item_interface_info(), true);
   Gio::DBus::Proxy::create_for_bus(Gio::DBus::BusType::BUS_TYPE_SESSION, bus_name, object_path,
-                                   SNI_INTERFACE_NAME, sigc::mem_fun(*this, &Item::proxyReady),
-                                   cancellable_, interface);
+                                  SNI_INTERFACE_NAME, sigc::mem_fun(*this, &Item::proxyReady),
+                                  cancellable_, interface);
 }
 
 bool Item::handleMouseEnter(GdkEventCrossing* const& e) {
